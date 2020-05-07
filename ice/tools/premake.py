@@ -1,4 +1,4 @@
-class Premake(object):
+class GenPremake5(object):
     premake_installer = "premake_installer/5.0.0-alpha14@bincrafters/stable"
     premake_generators_vstudio = {
         "11": "vs2012",

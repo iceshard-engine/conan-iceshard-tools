@@ -1,9 +1,9 @@
 # from enum import Enum
-from conans import ConanFile, MSBuild
+from conans import ConanFile, MSBuild, CMake
 from conans import tools
 
-from tools.premake import Premake
-from tools.cmake import Cmake
+from ice.tools.premake import GenPremake5
+from ice.tools.cmake import GenCMake
 import os
 
 ##
@@ -31,6 +31,7 @@ class IceTools(object):
             tools.get(**source_info)
 
     def build(self):
+        self._ice.source_dir = "{}-{}".format(self.name, self.version)
         with tools.chdir(self._ice.source_dir):
             self.ice_build()
 
@@ -39,11 +40,11 @@ class IceTools(object):
         self._ice = IceProperties()
 
         if generator == "premake5":
-            self._ice.generator = Premake(self)
+            self._ice.generator = GenPremake5(self)
             self._ice.build_requires.append(self._ice.generator.premake_installer)
 
         elif generator == "cmake":
-            self._ice.generator = Cmake(self)
+            self._ice.generator = GenCMake(self)
             self._ice.build_requires.append(self._ice.generator.cmake_installer)
 
         else:
@@ -62,37 +63,15 @@ class IceTools(object):
             msbuild.build(solution, build_type=build_type)
 
     def ice_build_cmake(self, build_types=["Debug", "Release"]):
-        cmake = CMake(self)
-
-        # Multi configuration CMake project
-        if cmake.is_multi_configuration:
-            os.mkdir("build")
-
-            with tools.chdir("build"):
-                cmmd = 'cmake ".." {}'.format(cmake.command_line)
-                self.run(cmmd)
-
-                for build_type in build_types:
-                    self.run("cmake --build . --config {}".format(build_type))
-
-        # Single configuration CMake project
-        else:
-            for build_type in build_types:
-
-                build_path = "build_{}".format(build_type)
-                os.mkdir(build_path)
-
-                with tools.chdir(build_path):
-                    self.output.info("Building {}".format(build_type))
-                    self.run("cmake .. {} -DCMAKE_BUILD_TYPE={}".format(cmake.command_line, build_type))
-                    self.run("cmake --build .")
-                    shutil.rmtree("CMakeFiles")
-                    os.remove("CMakeCache.txt")
+        for build_type in build_types:
+            cmake = CMake(self, build_type=build_type)
+            cmake.configure(source_dir="..", build_dir="build")
+            cmake.build()
 
 ##
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.2"
+    version = "0.3"
 
     exports = "tools/*"
