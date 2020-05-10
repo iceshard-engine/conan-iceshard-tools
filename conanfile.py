@@ -74,4 +74,4 @@ class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
     version = "0.3"
 
-    exports = "tools/*"
+    exports = "ice/*"
