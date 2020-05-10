@@ -27,7 +27,7 @@ class IceTools(object):
             git = tools.Git(folder=self._ice.source_dir)
             git.clone(source_info["url"])
             git.checkout(source_info["branch"])
-        if "tag" in source_info:
+        elif "tag" in source_info:
             git = tools.Git(folder=self._ice.source_dir)
             git.clone(source_info["url"])
             git.checkout(source_info["tag"])
