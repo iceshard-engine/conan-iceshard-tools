@@ -22,7 +22,7 @@ class IceTools(object):
     def source(self):
         self._ice.source_dir = "{}-{}".format(self.name, self.version)
 
-        source_info = self.conan_data["sources"][self.version]
+        source_info = self.conan_data["sources"][self.ice_source_entry(self.version)]
         if "branch" in source_info:
             git = tools.Git(folder=self._ice.source_dir)
             git.clone(source_info["url"])
@@ -32,6 +32,7 @@ class IceTools(object):
 
     def build(self):
         self._ice.source_dir = "{}-{}".format(self.name, self.version)
+        self._ice.out_dir = self._ice.source_dir
         with tools.chdir(self._ice.source_dir):
             self.ice_build()
 
@@ -54,6 +55,12 @@ class IceTools(object):
         if self.settings.compiler == "Visual Studio":
             del self.settings.compiler.runtime
 
+    def ice_source_entry(self, version):
+        return version
+
+    def ice_generate(self):
+        self._ice.generator.generate()
+
     def ice_build(self):
         pass
 
@@ -68,10 +75,13 @@ class IceTools(object):
             cmake.configure(source_dir="..", build_dir="build")
             cmake.build()
 
+    def ice_build_make(self, build_types=["Debug", "Release"]):
+        self.output.error("The 'IceTools.ice_build_make' method is not yet implemented!")
+
 ##
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.3"
+    version = "0.4"
 
     exports = "ice/*"

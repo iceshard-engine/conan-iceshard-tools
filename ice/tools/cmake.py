@@ -6,8 +6,3 @@ class GenCMake(object):
 
     def generate(self, compiler):
         pass
-        # if compiler == "Visual Studio":
-        #     generator = premake_generators_vstudio.get(str(self.settings.compiler.version), "vs2019")
-        #     return generator
-        # else:
-        #     return "<unknown_compiler>"
