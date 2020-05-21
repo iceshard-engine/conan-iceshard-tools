@@ -73,9 +73,11 @@ class IceTools(object):
         for build_type in build_types:
             msbuild.build(solution, build_type=build_type)
 
-    def ice_build_cmake(self, build_types=["Debug", "Release"]):
+    def ice_build_cmake(self, build_types=["Debug", "Release"], definitions={}):
         for build_type in build_types:
             cmake = CMake(self, build_type=build_type)
+            for name, value in definitions.items():
+                cmake.definitions[name] = value
             cmake.configure(source_dir="..", build_dir="build")
             cmake.build()
 
@@ -86,6 +88,6 @@ class IceTools(object):
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.5"
+    version = "0.5.1"
 
     exports = "ice/*"
