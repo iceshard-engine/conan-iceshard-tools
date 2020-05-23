@@ -25,12 +25,10 @@ class IceTools(object):
         source_info = self.conan_data["sources"][self.ice_source_entry(self.version)]
         if "branch" in source_info:
             git = tools.Git(folder=self._ice.source_dir)
-            git.clone(source_info["url"])
-            git.checkout(source_info["branch"])
+            git.clone(source_info["url"], source_info["branch"])
         elif "tag" in source_info:
             git = tools.Git(folder=self._ice.source_dir)
-            git.clone(source_info["url"])
-            git.checkout(source_info["tag"])
+            git.clone(source_info["url"], source_info["tag"])
         else:
             tools.get(**source_info)
 
@@ -88,6 +86,6 @@ class IceTools(object):
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.5.1"
+    version = "0.5.2"
 
     exports = "ice/*"
