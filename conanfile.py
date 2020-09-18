@@ -44,7 +44,7 @@ class IceTools(object):
     def ice_init(self, generator):
         self._ice = IceProperties()
 
-        if generator == "none"
+        if generator == "none":
             pass
 
         elif generator == "premake5":
