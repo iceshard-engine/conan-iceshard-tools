@@ -44,7 +44,10 @@ class IceTools(object):
     def ice_init(self, generator):
         self._ice = IceProperties()
 
-        if generator == "premake5":
+        if generator == "none"
+            pass
+
+        elif generator == "premake5":
             self._ice.generator = GenPremake5(self)
             self._ice.build_requires.append(self._ice.generator.premake_installer)
 
@@ -88,6 +91,6 @@ class IceTools(object):
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.5.3"
+    version = "0.5.4"
 
     exports = "ice/*"
