@@ -1,14 +1,11 @@
-name: Deploy
+name: Validate
 
-on:
-  push:
-    tags:
-    - v*
+on: 'push'
 
 jobs:
 
-  deploy-build-ubuntu:
-    name: Deploy (Ubuntu)
+  validation-build-ubuntu:
+    name: Validate (Ubuntu)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -20,13 +17,12 @@ jobs:
     - name: Export
       run: |
         ~/.local/bin/conan create . conan-iceshard-tools/0.6.0@iceshard/stable
-    - name: Deploy
+    - name: Success
       run: |
-        ~/.local/bin/conan user iceshard -r conan-iceshard -p ${{ secrets.CONAN_PASSWORD }}
-        ~/.local/bin/conan upload -r conan-iceshard conan-iceshard-tools/0.6.0@iceshard/stable --all
+        echo 'Validation success'
 
-  deploy-build-windows:
-    name: Deploy (Windows)
+  validation-build-windows:
+    name: Validate (Windows)
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +34,6 @@ jobs:
     - name: Export
       run: |
         conan create . conan-iceshard-tools/0.6.0@iceshard/stable
-    - name: Deploy
+    - name: Success
       run: |
-        conan user iceshard -r conan-iceshard -p ${{ secrets.CONAN_PASSWORD }}
-        conan upload -r conan-iceshard conan-iceshard-tools/0.6.0@iceshard/stable --all
+        echo 'Validation success'
