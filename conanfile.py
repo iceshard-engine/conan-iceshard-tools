@@ -85,12 +85,13 @@ class IceTools(object):
             cmake.build()
 
     def ice_build_make(self, build_types=["Debug", "Release"]):
-        self.output.error("The 'IceTools.ice_build_make' method is not yet implemented!")
+        for build_type in build_types:
+            self.run("make config={}".format(build_type.lower()))
 
 ##
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.5.4"
+    version = "0.6.0"
 
     exports = "ice/*"

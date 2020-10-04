@@ -14,6 +14,7 @@ class GenPremake5(object):
     def generate(self, config_file = None):
         package = self._package
         settings = self._package.settings
+        options = self._package.options
 
         # Get the proper premake5 action
         premake_action = "gmake"
@@ -21,6 +22,8 @@ class GenPremake5(object):
             premake_action = self.premake_generators_vstudio.get(str(settings.compiler.version), "vs2019")
 
         premake_commandline = "premake5 {} --arch={}".format(premake_action, settings.arch)
+        for key, value in options.items():
+            premake_commandline += " --{}={}".format(key, value)
         if config_file != None:
             premake_commandline += " --file={}".format(config_file)
 
