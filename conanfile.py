@@ -1,6 +1,7 @@
 # from enum import Enum
 from conans import ConanFile, MSBuild, CMake
 from conans import tools
+from shutil import copyfile
 
 from ice.tools.premake import GenPremake5
 from ice.tools.cmake import GenCMake
@@ -38,6 +39,13 @@ class IceTools(object):
         self._ice.source_dir = "{}-{}".format(self.name, self.version)
         self._ice.out_dir = self._ice.source_dir
         with tools.chdir(self._ice.source_dir):
+
+            # Copy premake5 files
+            if self._ice.generator_name == "premake5":
+                copyfile("../premake5.lua", "premake5.lua")
+                if len(self.requires) > 0 or len(self.build_requires) > 0:
+                    copyfile("../conan.lua", "conan.lua")
+
             self.ice_build()
 
     # Iceshard method implementations
@@ -48,10 +56,15 @@ class IceTools(object):
             pass
 
         elif generator == "premake5":
+            self._ice.generator_name = generator
             self._ice.generator = GenPremake5(self)
             self._ice.build_requires.append(self._ice.generator.premake_installer)
+            if len(self.requires) > 0 or len(self.build_requires) > 0:
+                self.generators = "premake"
+                self._ice.build_requires.append(self._ice.generator.premake_generator)
 
         elif generator == "cmake":
+            self._ice.generator_name = generator
             self._ice.generator = GenCMake(self)
             self._ice.build_requires.append(self._ice.generator.cmake_installer)
 
@@ -92,6 +105,6 @@ class IceTools(object):
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.6.0"
+    version = "0.6.1"
 
     exports = "ice/*"

@@ -1,5 +1,7 @@
 class GenPremake5(object):
     premake_installer = "premake-installer/5.0.0@iceshard/stable"
+    premake_generator = "premake-generator/0.1.0@iceshard/stable"
+
     premake_generators_vstudio = {
         "11": "vs2012",
         "12": "vs2013",
