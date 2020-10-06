@@ -7,8 +7,8 @@ on:
 
 jobs:
 
-  deploy-build-ubuntu:
-    name: Deploy (Ubuntu)
+  deploy-build:
+    name: Deploy (*)
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -19,26 +19,8 @@ jobs:
         ~/.local/bin/conan remote add conan-iceshard https://conan.iceshard.net/
     - name: Export
       run: |
-        ~/.local/bin/conan create . conan-iceshard-tools/0.6.1@iceshard/stable
+        ~/.local/bin/conan create . conan-iceshard-tools/0.6.2@iceshard/stable
     - name: Deploy
       run: |
         ~/.local/bin/conan user iceshard -r conan-iceshard -p ${{ secrets.CONAN_PASSWORD }}
-        ~/.local/bin/conan upload -r conan-iceshard conan-iceshard-tools/0.6.1@iceshard/stable --all
-
-  deploy-build-windows:
-    name: Deploy (Windows)
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup conan
-      run: |
-        pip3 install setuptools
-        pip3 install conan
-        conan remote add conan-iceshard https://conan.iceshard.net/
-    - name: Export
-      run: |
-        conan create . conan-iceshard-tools/0.6.1@iceshard/stable
-    - name: Deploy
-      run: |
-        conan user iceshard -r conan-iceshard -p ${{ secrets.CONAN_PASSWORD }}
-        conan upload -r conan-iceshard conan-iceshard-tools/0.6.1@iceshard/stable --all
+        ~/.local/bin/conan upload -r conan-iceshard conan-iceshard-tools/0.6.2@iceshard/stable --all

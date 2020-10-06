@@ -1,6 +1,6 @@
 class GenPremake5(object):
     premake_installer = "premake-installer/5.0.0@iceshard/stable"
-    premake_generator = "premake-generator/0.1.0@iceshard/stable"
+    premake_generator = "premake-generator/0.1.1@iceshard/stable"
 
     premake_generators_vstudio = {
         "11": "vs2012",
@@ -19,7 +19,7 @@ class GenPremake5(object):
         options = self._package.options
 
         # Get the proper premake5 action
-        premake_action = "gmake"
+        premake_action = "gmake2"
         if settings.compiler == "Visual Studio":
             premake_action = self.premake_generators_vstudio.get(str(settings.compiler.version), "vs2019")
 

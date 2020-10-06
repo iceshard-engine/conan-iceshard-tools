@@ -43,7 +43,7 @@ class IceTools(object):
             # Copy premake5 files
             if self._ice.generator_name == "premake5":
                 copyfile("../premake5.lua", "premake5.lua")
-                if len(self.requires) > 0 or len(self.build_requires) > 0:
+                if hasattr(self, 'generators') and "premake" in self.generators:
                     copyfile("../conan.lua", "conan.lua")
 
             self.ice_build()
@@ -59,7 +59,7 @@ class IceTools(object):
             self._ice.generator_name = generator
             self._ice.generator = GenPremake5(self)
             self._ice.build_requires.append(self._ice.generator.premake_installer)
-            if len(self.requires) > 0 or len(self.build_requires) > 0:
+            if hasattr(self, 'requires') or hasattr(self, 'build_requires'):
                 self.generators = "premake"
                 self._ice.build_requires.append(self._ice.generator.premake_generator)
 
@@ -99,12 +99,12 @@ class IceTools(object):
 
     def ice_build_make(self, build_types=["Debug", "Release"]):
         for build_type in build_types:
-            self.run("make config={}".format(build_type.lower()))
+            self.run("make -f Makefile config={}".format(build_type.lower()))
 
 ##
 ## Conan package class.
 class ConanIceshardTools(ConanFile):
     name = "conan-iceshard-tools"
-    version = "0.6.1"
+    version = "0.6.2"
 
     exports = "ice/*"
