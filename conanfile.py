@@ -53,6 +53,7 @@ class IceTools(object):
         self._ice = IceProperties()
 
         if generator == "none":
+            self._ice.generator_name = generator
             pass
 
         elif generator == "premake5":
